@@ -6,8 +6,9 @@ import reportWebVitals from "./reportWebVitals";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { store } from "./redux/store.js";
+import { store, persistor } from "./redux/store.js";
 import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -18,12 +19,18 @@ const queryClient = new QueryClient({
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <App />
-        <ToastContainer position="bottom-left" autoClose={5000} closeOnClick />
-      </QueryClientProvider>
-    </Provider>
+    <PersistGate persistor={persistor}>
+      <Provider store={store}>
+        <QueryClientProvider client={queryClient}>
+          <App />
+          <ToastContainer
+            position="bottom-left"
+            autoClose={5000}
+            closeOnClick
+          />
+        </QueryClientProvider>
+      </Provider>
+    </PersistGate>
   </React.StrictMode>
 );
 
