@@ -29,7 +29,7 @@ function SignUp() {
 
   return (
     <Layout>
-      <div className="min-h-screen mt-10">
+      <div className=" mt-10">
         <div className="grid grid-cols-1 md:grid-cols-2 py-5 px-20 justify-center gap-5  md:items-center">
           {/*left */}
           <div>

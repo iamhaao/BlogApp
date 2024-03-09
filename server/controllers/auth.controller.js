@@ -42,7 +42,7 @@ export const signin = async (req, res, next) => {
     }
     const validUser = await User.findOne({ email });
     if (!validUser) {
-      throw new Error("User with email not found");
+      throw new Error("User not found in system");
     }
     const validPassword = bcryptjs.compareSync(password, validUser.password);
     if (!validPassword) {
