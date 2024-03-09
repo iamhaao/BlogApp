@@ -4,7 +4,6 @@ import { FaGithub } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa6";
 import { MdOutlineMailOutline } from "react-icons/md";
 import { FaSquarePhone } from "react-icons/fa6";
-import { SiAboutdotme } from "react-icons/si";
 
 function FooterComponent() {
   return (
