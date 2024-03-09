@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { signup } from "../api/auth";
 import { useMutation } from "react-query";
 import Toast from "../shared/Toast";
+import OAuth from "../components/OAuth";
 function SignUp() {
   const {
     register,
@@ -143,6 +144,7 @@ function SignUp() {
                   "Sign Up"
                 )}
               </Button>
+              <OAuth />
             </form>
             <div className="flex gap-1 text-sm mt-5">
               <span>Have an account?</span>

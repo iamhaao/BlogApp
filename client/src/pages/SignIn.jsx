@@ -8,6 +8,7 @@ import { useMutation } from "react-query";
 import { useDispatch } from "react-redux";
 import Toast from "../shared/Toast";
 import { signInSuccess } from "../redux/user/userSlice";
+import OAuth from "../components/OAuth";
 function SignIn() {
   const {
     register,
@@ -108,6 +109,7 @@ function SignIn() {
                   "Sign In"
                 )}
               </Button>
+              <OAuth />
             </form>
             <div className="flex gap-1 text-sm mt-5">
               <span>Don't have an account?</span>
