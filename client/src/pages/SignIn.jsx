@@ -3,9 +3,11 @@ import Layout from "../Layout/Layout";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useForm } from "react-hook-form";
-import { signin, signup } from "../api/auth";
+import { signin } from "../api/auth";
 import { useMutation } from "react-query";
+import { useDispatch } from "react-redux";
 import Toast from "../shared/Toast";
+import { signInSuccess } from "../redux/user/userSlice";
 function SignIn() {
   const {
     register,
@@ -13,8 +15,10 @@ function SignIn() {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { isLoading, mutate } = useMutation(signin, {
-    onSuccess: () => {
+    onSuccess: (data) => {
+      dispatch(signInSuccess(data));
       Toast({ message: "Welcome to Iamhaao Blog", type: "SUCCESS" });
       navigate("/");
     },
