@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { store, persistor } from "./redux/store.js";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
+import ThemeProvider from "./components/ThemeProvider.jsx";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -22,7 +23,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <PersistGate persistor={persistor}>
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
-          <App />
+          <ThemeProvider>
+            <App />
+          </ThemeProvider>
           <ToastContainer
             position="bottom-left"
             autoClose={5000}
