@@ -16,7 +16,7 @@ function Dashboard() {
   }, [location.search]);
   return (
     <Layout>
-      <div className="flex h-[80vh] flex-col md:flex-row">
+      <div className="flex h-full flex-col md:flex-row">
         <div className="md:w-56">
           {/*SideBar */}
           <DashSidebar tab={tab} />
