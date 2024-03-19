@@ -21,7 +21,12 @@ import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { deleteUser, updateUser } from "../api/user.api";
 import Toast from "../shared/Toast";
-import { deleteUserSuccess, updateUserSuccess } from "../redux/user/userSlice";
+import {
+  deleteUserSuccess,
+  signOutSuccess,
+  updateUserSuccess,
+} from "../redux/user/userSlice";
+import { signOut } from "../api/auth";
 function DashProfile() {
   const {
     register,
@@ -52,6 +57,18 @@ function DashProfile() {
         dispatch(deleteUserSuccess());
         setShowModal(false);
         Toast({ message: "Delete User Success", type: "SUCCESS" });
+      },
+      onError: (error) => {
+        Toast({ message: error.message, type: "ERROR" });
+      },
+    }
+  );
+  const { mutate: mutateSignout, isLoading: signoutLoading } = useMutation(
+    signOut,
+    {
+      onSuccess: () => {
+        dispatch(signOutSuccess());
+        Toast({ message: "Signed out!!!", type: "SUCCESS" });
       },
       onError: (error) => {
         Toast({ message: error.message, type: "ERROR" });
@@ -103,6 +120,9 @@ function DashProfile() {
   };
   const hanldeDelete = () => {
     muateDeleteUser(currentUser._id);
+  };
+  const hanldeSignout = () => {
+    mutateSignout(currentUser._id);
   };
   return (
     <div className="mx-auto max-w-lg p-3 w-full">
@@ -198,8 +218,18 @@ function DashProfile() {
         </Button>
       </form>
       <div className="text-red-500 flex justify-between my-5">
-        <span onClick={() => setShowModal(true)}>Delete Account</span>
-        <span>Sign Out</span>
+        <span
+          className="hover:cursor-pointer hover:bg-red-500 p-2 rounded-lg hover:text-white font-medium"
+          onClick={() => setShowModal(true)}
+        >
+          Delete Account
+        </span>
+        <span
+          className="hover:cursor-pointer hover:bg-red-500 p-2 rounded-lg hover:text-white font-medium"
+          onClick={hanldeSignout}
+        >
+          Sign Out
+        </span>
       </div>
       <Modal
         show={showModal}
