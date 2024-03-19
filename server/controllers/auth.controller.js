@@ -52,12 +52,11 @@ export const signin = async (req, res, next) => {
     const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
-    res
-      .status(200)
-      .cookie("auth_token", token, {
-        httpOnly: true,
-      })
-      .json(rest);
+    res.cookie("auth_token", token, {
+      httpOnly: true,
+      maxAge: 86400000,
+    });
+    res.status(200).json(rest);
   } catch (error) {
     next(error);
   }

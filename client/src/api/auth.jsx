@@ -17,7 +17,12 @@ export const signup = async (user) => {
 };
 export const signin = async (user) => {
   try {
-    const { data } = await axios.post(`${API_BASE_URL}/api/auth/signin`, user);
+    const { data } = await axios.post(`${API_BASE_URL}/api/auth/signin`, user, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
     return data;
   } catch (error) {
     if (error.response && error.response.data && error.response.data.message) {
@@ -32,7 +37,12 @@ export const signin = async (user) => {
 
 export const authGoogle = async (user) => {
   try {
-    const { data } = await axios.post(`${API_BASE_URL}/api/auth/google`, user);
+    const { data } = await axios.post(`${API_BASE_URL}/api/auth/google`, user, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
     return data;
   } catch (error) {
     if (error.response && error.response.data && error.response.data.message) {

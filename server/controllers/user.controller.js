@@ -2,36 +2,45 @@ import bcryptjs from "bcryptjs";
 import User from "../models/user.model.js";
 export const updateUser = async (req, res, next) => {
   try {
-    const { password, username, avatar, email } = req.body;
-    if (req.user.id !== req.params.userId) {
+    const { username, avatar, email } = req.body;
+    console.log(req.user);
+    if (req.user._id.toString() !== req.params.userId) {
       throw new Error("You are not allowed to updated this user");
     }
-    if (password) {
-      if (password < 6) {
-        throw new Error("Password must be at least 6 charactiers");
-      }
+    if (
+      username &&
+      (username.length < 6 || username.length > 30 || username.includes(" "))
+    ) {
+      throw new Error(
+        "Username must be between from 7 to 30 characters and can not contain space"
+      );
     }
-    if (username) {
-      if (username.length < 6 || username.length > 30) {
-        throw new Error("Username must be between from 7 to 30 characters");
-      }
-      if (username.includes(" ")) {
-        throw new Error("Username can not contain space");
-      }
+
+    // Xây dựng đối tượng $set chỉ chứa các trường dữ liệu cần cập nhật nếu chúng khác với dữ liệu hiện tại
+    const $set = {};
+    if (username && username !== req.user.username) {
+      $set.username = username;
     }
-    const updatedUser = await User.findByIdAndUpdate(
-      req.params.userId,
-      {
-        $set: {
-          username,
-          avatar,
-          email,
-        },
-      },
-      { new: true }
-    );
-    const { password: pass, ...rest } = updatedUser._doc;
-    res.status(200).json(rest);
+    if (avatar && avatar !== req.user.avatar) {
+      $set.avatar = avatar;
+    }
+    if (email && email !== req.user.email) {
+      $set.email = email;
+    }
+
+    // Chỉ cập nhật nếu có trường dữ liệu cần cập nhật
+    if (Object.keys($set).length > 0) {
+      const updatedUser = await User.findByIdAndUpdate(
+        req.params.userId,
+        { $set },
+        { new: true }
+      );
+      const { password: pass, ...rest } = updatedUser._doc;
+      res.status(200).json(rest);
+    } else {
+      // Không cần cập nhật, trả về dữ liệu hiện tại của người dùng
+      res.status(200).json(req.user);
+    }
   } catch (error) {
     next(error);
   }

@@ -1,6 +1,6 @@
 import { Button, TextInput } from "flowbite-react";
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import {
   getDownloadURL,
@@ -9,8 +9,12 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../firebase";
+import { useMutation } from "react-query";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import { updateUser } from "../api/user.api";
+import Toast from "../shared/Toast";
+import { updateUserSuccess } from "../redux/user/userSlice";
 function DashProfile() {
   const {
     register,
@@ -18,12 +22,21 @@ function DashProfile() {
     formState: { errors },
   } = useForm();
   const { currentUser } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [imageProcess, setImageProcess] = useState(null);
   const [imageError, setImageError] = useState(null);
   const filePickerRef = useRef();
-
+  const { mutate, isLoading } = useMutation(updateUser, {
+    onSuccess: (data) => {
+      dispatch(updateUserSuccess(data));
+      Toast({ message: "Updated Success!!!", type: "SUCCESS" });
+    },
+    onError: (error) => {
+      Toast({ message: error.message, type: "ERROR" });
+    },
+  });
   useEffect(() => {
     if (imageFile) {
       uploadImage();
@@ -63,10 +76,17 @@ function DashProfile() {
       }
     );
   };
+  const handleUpdate = (data) => {
+    mutate({ ...data, avatar: imageFileUrl, userId: currentUser._id });
+  };
+
   return (
     <div className="mx-auto max-w-lg p-3 w-full">
       <h1 className="my-7 text-center font-semibold">Profile</h1>
-      <form className="flex w-full justify-center flex-col gap-4">
+      <form
+        className="flex w-full justify-center flex-col gap-4"
+        onSubmit={handleSubmit(handleUpdate)}
+      >
         <input
           ref={filePickerRef}
           type="file"
@@ -107,26 +127,6 @@ function DashProfile() {
         <div>
           <TextInput
             type="text"
-            placeholder="name@email.com"
-            id="username"
-            {...register("username", {
-              required: "username is required",
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                message: "Invalid email address",
-              },
-            })}
-            defaultValue={currentUser.username}
-          />
-          {errors.username && (
-            <span className="text-red-500 font-normal mx-1">
-              {errors.username.message}
-            </span>
-          )}
-        </div>
-        <div>
-          <TextInput
-            type="text"
             id="email"
             {...register("email", {
               required: "Firstname is required",
@@ -136,6 +136,7 @@ function DashProfile() {
               },
             })}
             defaultValue={currentUser.email}
+            readOnly={true}
           />
           {errors.email && (
             <span className="text-red-500 font-normal mx-1">
@@ -143,6 +144,23 @@ function DashProfile() {
             </span>
           )}
         </div>
+        <div>
+          <TextInput
+            type="text"
+            placeholder="name@email.com"
+            id="username"
+            {...register("username", {
+              required: "username is required",
+            })}
+            defaultValue={currentUser.username}
+          />
+          {errors.username && (
+            <span className="text-red-500 font-normal mx-1">
+              {errors.username.message}
+            </span>
+          )}
+        </div>
+
         <div>
           <TextInput type="text" placeholder="***********" id="password" />
           {errors.password && (
@@ -152,7 +170,7 @@ function DashProfile() {
           )}
         </div>
         <Button type="submit" gradientDuoTone="purpleToBlue" outline>
-          Update
+          {isLoading ? "Loading..." : "Update"}
         </Button>
       </form>
       <div className="text-red-500 flex justify-between my-5">
