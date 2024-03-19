@@ -1,4 +1,11 @@
-import { Button, TextInput } from "flowbite-react";
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  TextInput,
+} from "flowbite-react";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
@@ -12,9 +19,9 @@ import { app } from "../firebase";
 import { useMutation } from "react-query";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import { updateUser } from "../api/user.api";
+import { deleteUser, updateUser } from "../api/user.api";
 import Toast from "../shared/Toast";
-import { updateUserSuccess } from "../redux/user/userSlice";
+import { deleteUserSuccess, updateUserSuccess } from "../redux/user/userSlice";
 function DashProfile() {
   const {
     register,
@@ -27,6 +34,7 @@ function DashProfile() {
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [imageProcess, setImageProcess] = useState(null);
   const [imageError, setImageError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const filePickerRef = useRef();
   const { mutate, isLoading } = useMutation(updateUser, {
     onSuccess: (data) => {
@@ -37,18 +45,19 @@ function DashProfile() {
       Toast({ message: error.message, type: "ERROR" });
     },
   });
-  useEffect(() => {
-    if (imageFile) {
-      uploadImage();
+  const { mutate: muateDeleteUser, isLoading: deleteLoading } = useMutation(
+    deleteUser,
+    {
+      onSuccess: () => {
+        dispatch(deleteUserSuccess());
+        setShowModal(false);
+        Toast({ message: "Delete User Success", type: "SUCCESS" });
+      },
+      onError: (error) => {
+        Toast({ message: error.message, type: "ERROR" });
+      },
     }
-  }, [imageFile]);
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImageFile(e.target.files[0]);
-      setImageFileUrl(URL.createObjectURL(file));
-    }
-  };
+  );
   const uploadImage = async () => {
     setImageError(null);
     const storage = getStorage(app);
@@ -76,10 +85,25 @@ function DashProfile() {
       }
     );
   };
+  useEffect(() => {
+    if (imageFile) {
+      uploadImage();
+    }
+  }, [imageFile]);
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(e.target.files[0]);
+      setImageFileUrl(URL.createObjectURL(file));
+    }
+  };
+
   const handleUpdate = (data) => {
     mutate({ ...data, avatar: imageFileUrl, userId: currentUser._id });
   };
-
+  const hanldeDelete = () => {
+    muateDeleteUser(currentUser._id);
+  };
   return (
     <div className="mx-auto max-w-lg p-3 w-full">
       <h1 className="my-7 text-center font-semibold">Profile</h1>
@@ -174,9 +198,33 @@ function DashProfile() {
         </Button>
       </form>
       <div className="text-red-500 flex justify-between my-5">
-        <span>Delete Account</span>
+        <span onClick={() => setShowModal(true)}>Delete Account</span>
         <span>Sign Out</span>
       </div>
+      <Modal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        size={"sm"}
+        popup
+      >
+        <ModalHeader />
+        <ModalBody>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="w-14 h-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
+            <h3 className=" mb-5 text-lg text-gray-500 dark:text-gray-200">
+              Are you sure you want to delete your account ?
+            </h3>
+            <div className="flex justify-between">
+              <Button color="failure" onClick={hanldeDelete}>
+                Yes, I'm sure
+              </Button>
+              <Button color="gray" onClick={() => setShowModal(false)}>
+                No, cancel
+              </Button>
+            </div>
+          </div>
+        </ModalBody>
+      </Modal>
     </div>
   );
 }
