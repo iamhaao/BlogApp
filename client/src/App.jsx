@@ -7,6 +7,7 @@ import Projects from "./pages/Project";
 import DashBoard from "./pages/Dashboard";
 import { PrivateRoute, AdminRoute } from "./shared/PrivateRoute";
 import CreatePost from "./pages/CreatePost";
+import UpdatePost from "./pages/UpdatePost";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path="/projects" element={<Projects />} />
             <Route element={<AdminRoute />}>
               <Route path="/create-post" element={<CreatePost />} />
+              <Route path="/update-post/:postId" element={<UpdatePost />} />
             </Route>
           </Route>
         </Routes>
