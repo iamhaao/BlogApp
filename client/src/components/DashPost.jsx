@@ -1,18 +1,36 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { getByUserPosts } from "../api/post.api";
+import { getPosts } from "../api/post.api";
 import Toast from "../shared/Toast";
 import { Table } from "flowbite-react";
 import { Link } from "react-router-dom";
 function DashPost() {
   const { currentUser } = useSelector((state) => state.user);
   const [userPosts, setUserPosts] = useState([]);
+  const [showMore, setShowMore] = useState(true);
+
+  const handleShowMore = async () => {
+    const startIndex = userPosts.length;
+    try {
+      const data = await getPosts(currentUser._id, startIndex);
+      setUserPosts((prev) => [...prev, ...data.posts]);
+      if (data.posts.length < 9) {
+        setShowMore(false);
+      }
+    } catch (error) {
+      Toast({ message: error.message, type: "ERROR" });
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getByUserPosts(currentUser._id);
+        const data = await getPosts(currentUser._id, "");
         setUserPosts(data.posts);
+        console.log(data.posts.length);
+        if (data.posts.length < 9) {
+          setShowMore(false);
+        }
       } catch (error) {
         console.log(error);
         Toast({ message: error.message, type: "ERROR" });
@@ -74,6 +92,14 @@ function DashPost() {
               </Table.Body>
             ))}
           </Table>
+          {showMore && (
+            <button
+              onClick={handleShowMore}
+              className="w-full text-teal-500 self-center text-sm py-7"
+            >
+              Show more
+            </button>
+          )}
         </>
       ) : (
         <p>Not Post Yet</p>

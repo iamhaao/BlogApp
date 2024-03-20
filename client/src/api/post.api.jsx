@@ -22,10 +22,10 @@ export const createPost = async (postData) => {
     }
   }
 };
-export const getByUserPosts = async (userId) => {
+export const getPosts = async (userId, startIndex) => {
   try {
     const { data } = await axios.get(
-      `${API_BASE_URL}/api/post/getPosts?userId=${userId}`,
+      `${API_BASE_URL}/api/post/getPosts?userId=${userId}&startIndex=${startIndex}`,
       {
         headers: {
           "Content-Type": "application/json",
