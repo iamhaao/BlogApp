@@ -15,8 +15,8 @@ import "react-circular-progressbar/dist/styles.css";
 import Toast from "../shared/Toast";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
-import { createPost, getPosts, updatePost } from "../api/post.api";
-import { useNavigate, useParams } from "react-router-dom";
+import { getPosts, updatePost } from "../api/post.api";
+import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 function UpdatePost() {
@@ -33,7 +33,6 @@ function UpdatePost() {
   const [content, setContent] = useState(null);
   const { postId } = useParams();
   const { currentUser } = useSelector((state) => state.user);
-  const navigte = useNavigate();
   const { mutate, isLoading } = useMutation(updatePost, {
     onSuccess: () => {
       Toast({ message: "Updated success!!", type: "SUCCESS" });

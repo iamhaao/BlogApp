@@ -64,3 +64,27 @@ export const signout = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getUsers = async (req, res, next) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const sortDirection = req.query.sortDirection === "asc" ? 1 : -1;
+    const users = await User.find({})
+      .sort({ createdAt: sortDirection })
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    const usersWithoutPassword = users.map((user) => {
+      const { password, ...rest } = user._doc;
+      return rest;
+    });
+    const totalUser = await User.countDocuments();
+    const pages = Math.ceil(totalUser / limit);
+    res
+      .status(200)
+      .json({ users: usersWithoutPassword, totalUser, page, pages });
+  } catch (error) {
+    next(error);
+  }
+};
