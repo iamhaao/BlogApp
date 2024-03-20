@@ -219,7 +219,11 @@ function DashProfile() {
         </Button>
         {currentUser.isAdmin && (
           <Link to={"/create-post"}>
-            <Button type="button" gradientDuoTone="purpleToPink">
+            <Button
+              className="w-full"
+              type="button"
+              gradientDuoTone="purpleToPink"
+            >
               Create A post
             </Button>
           </Link>
