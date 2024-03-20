@@ -9,6 +9,7 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 import {
   getDownloadURL,
   getStorage,
@@ -216,6 +217,13 @@ function DashProfile() {
         <Button type="submit" gradientDuoTone="purpleToBlue" outline>
           {isLoading ? "Loading..." : "Update"}
         </Button>
+        {currentUser.isAdmin && (
+          <Link to={"/create-post"}>
+            <Button type="button" gradientDuoTone="purpleToPink">
+              Create A post
+            </Button>
+          </Link>
+        )}
       </form>
       <div className="text-red-500 flex justify-between my-5">
         <span

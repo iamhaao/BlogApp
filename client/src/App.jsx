@@ -5,7 +5,8 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Projects from "./pages/Project";
 import DashBoard from "./pages/Dashboard";
-import PrivateRoute from "./shared/PrivateRoute";
+import { PrivateRoute, AdminRoute } from "./shared/PrivateRoute";
+import CreatePost from "./pages/CreatePost";
 
 function App() {
   return (
@@ -19,6 +20,9 @@ function App() {
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<DashBoard />} />
             <Route path="/projects" element={<Projects />} />
+            <Route element={<AdminRoute />}>
+              <Route path="/create-post" element={<CreatePost />} />
+            </Route>
           </Route>
         </Routes>
       </Router>

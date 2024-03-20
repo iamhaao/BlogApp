@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "/images/userDefault.png",
     },
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
