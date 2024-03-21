@@ -4,7 +4,7 @@ function Pagination({ page, pages, onPageChange }) {
     pageNumber.push(i);
   }
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center my-4">
       <ul className="flex border border-slate-300">
         {pageNumber.map((number) => (
           <li

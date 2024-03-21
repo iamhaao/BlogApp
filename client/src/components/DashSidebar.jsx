@@ -2,7 +2,11 @@ import React from "react";
 import { Sidebar } from "flowbite-react";
 import { FaUser } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
-import { HiDocumentText } from "react-icons/hi";
+import {
+  HiDocumentText,
+  HiOutlineUserGroup,
+  HiUserGroup,
+} from "react-icons/hi";
 
 import { Link } from "react-router-dom";
 import { useMutation } from "react-query";
@@ -44,15 +48,26 @@ function DashSidebar({ tab }) {
             </Sidebar.Item>
           </Link>
           {currentUser.isAdmin && (
-            <Link to={"/dashboard?tab=posts"}>
-              <Sidebar.Item
-                labelColor="dark"
-                active={tab === "profile"}
-                icon={HiDocumentText}
-              >
-                Post
-              </Sidebar.Item>
-            </Link>
+            <>
+              <Link to={"/dashboard?tab=posts"}>
+                <Sidebar.Item
+                  labelColor="dark"
+                  active={tab === "posts"}
+                  icon={HiDocumentText}
+                >
+                  Post
+                </Sidebar.Item>
+              </Link>
+              <Link to={"/dashboard?tab=users"}>
+                <Sidebar.Item
+                  labelColor="dark"
+                  active={tab === "users"}
+                  icon={HiOutlineUserGroup}
+                >
+                  Users
+                </Sidebar.Item>
+              </Link>
+            </>
           )}
 
           <Sidebar.Item icon={MdLogout}>

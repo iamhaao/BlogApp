@@ -2,6 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   currentUser: null,
+  users: null,
+  page: null,
+  pages: null,
 };
 
 const userSlice = createSlice({
@@ -20,6 +23,11 @@ const userSlice = createSlice({
     signOutSuccess: (state) => {
       state.currentUser = null;
     },
+    getUsersSuccess: (state, action) => {
+      state.page = action.payload.page;
+      state.pages = action.payload.pages;
+      state.users = action.payload.users;
+    },
   },
 });
 export const {
@@ -27,5 +35,6 @@ export const {
   updateUserSuccess,
   deleteUserSuccess,
   signOutSuccess,
+  getUsersSuccess,
 } = userSlice.actions;
 export default userSlice.reducer;
