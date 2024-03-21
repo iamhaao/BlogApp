@@ -7,7 +7,7 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useMutation } from "react-query";
 import { getUsersSuccess } from "../redux/user/userSlice";
 import Pagination from "./Pagination";
-import { getUsers } from "../api/user.api";
+import { deleteUser, getUsers } from "../api/user.api";
 import { FcCheckmark } from "react-icons/fc";
 import { FcCancel } from "react-icons/fc";
 
@@ -27,9 +27,9 @@ function DashUser() {
   const handleOnchagePage = (data) => {
     getUser({ page: data });
   };
-  const { mutate, isLoading } = useMutation(deletePost, {
+  const { mutate, isSuccess } = useMutation(deleteUser, {
     onSuccess: () => {
-      Toast({ message: "Delete Post Success!", type: "SUCCESS" });
+      Toast({ message: "Delete User Success!", type: "SUCCESS" });
     },
     onError: (error) => {
       Toast({ message: error.message, type: "ERROR" });
@@ -38,10 +38,10 @@ function DashUser() {
 
   useEffect(() => {
     getUser({ page });
-  }, [currentUser._id, isLoading]);
+  }, [currentUser._id, isSuccess]);
 
   const handleDeleteUser = async () => {
-    console.log(userIdDelete);
+    mutate(userIdDelete);
     setShowModal(false);
   };
   return (
