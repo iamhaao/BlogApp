@@ -7,17 +7,17 @@ import { getPostSuccess } from "../redux/postSlice/postSlice";
 import { Button, Spinner } from "flowbite-react";
 import Layout from "../Layout/Layout";
 import CallToAction from "../components/CallToAction";
+import CommentSection from "../components/CommentSection";
 
 function PostPage() {
   const { postSlug } = useParams();
   const dispatch = useDispatch();
   const { post } = useSelector((state) => state.post);
-  const { mutate, isLoading, isError } = useMutation(getPosts, {
+  const { mutate, isLoading } = useMutation(getPosts, {
     onSuccess: (data) => {
       dispatch(getPostSuccess(data.posts[0]));
     },
   });
-  console.log(post);
   useEffect(() => {
     mutate({ postSlug });
   }, [postSlug]);
@@ -61,6 +61,7 @@ function PostPage() {
             <div className="max-w-4xl mx-auto w-full">
               <CallToAction />
             </div>
+            <CommentSection postId={post._id} />
           </div>
         )}
       </div>
