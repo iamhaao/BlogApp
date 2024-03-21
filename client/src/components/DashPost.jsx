@@ -15,7 +15,7 @@ function DashPost() {
   const handleShowMore = async () => {
     const startIndex = userPosts.length;
     try {
-      const data = await getPosts(currentUser._id, startIndex, "");
+      const data = await getPosts({ userId: currentUser._id, startIndex });
       setUserPosts((prev) => [...prev, ...data.posts]);
       if (data.posts.length < 9) {
         setShowMore(false);
@@ -35,9 +35,8 @@ function DashPost() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getPosts(currentUser._id, "", "");
+        const data = await getPosts({ userId: currentUser._id });
         setUserPosts(data.posts);
-        console.log(data.posts.length);
         if (data.posts.length < 9) {
           setShowMore(false);
         }

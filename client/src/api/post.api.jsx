@@ -22,17 +22,27 @@ export const createPost = async (postData) => {
     }
   }
 };
-export const getPosts = async (userId, startIndex, postId) => {
+export const getPosts = async (getData) => {
   try {
-    const { data } = await axios.get(
-      `${API_BASE_URL}/api/post/getPosts?userId=${userId}&startIndex=${startIndex}&postId=${postId}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      }
-    );
+    let url = `${API_BASE_URL}/api/post/getPosts`;
+    if (getData.postSlug) {
+      url += `?slug=${getData.postSlug}`;
+    }
+    if (getData.userId) {
+      url += `?userId=${getData.userId}`;
+    }
+    if (getData.startIndex) {
+      url += `?startIndex=${getData.startIndex}`;
+    }
+    if (getData.postId) {
+      url += `?postId=${getData.postId}`;
+    }
+    const { data } = await axios.get(url, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
 
     return data;
   } catch (error) {
