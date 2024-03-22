@@ -1,9 +1,14 @@
-import { Button, Textarea } from "flowbite-react";
+import { Button, Spinner, Textarea } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
-import { createComment, getComments, likeComment } from "../api/comment.api";
+import {
+  createComment,
+  editComment,
+  getComments,
+  likeComment,
+} from "../api/comment.api";
 import Toast from "../shared/Toast";
 import Comment from "./Comment";
 function CommentSection({ postId }) {
@@ -30,17 +35,28 @@ function CommentSection({ postId }) {
       },
     }
   );
-  const { mutate: likeMutate } = useMutation(likeComment, {
-    onSuccess: (data) => {
-      Toast({ message: "Liked success", type: "SUCCESS" });
-    },
-    onError: (error) => {
-      Toast({ message: error.message, type: "ERROR" });
-    },
-  });
+  const { mutate: likeMutate, isLoading: likeLoading } = useMutation(
+    likeComment,
+    {
+      onError: (error) => {
+        Toast({ message: error.message, type: "ERROR" });
+      },
+    }
+  );
+  const { mutate: mutateEdit, isLoading: editLoading } = useMutation(
+    editComment,
+    {
+      onSuccess: () => {
+        Toast({ message: "Edited Success", type: "SUCCESS" });
+      },
+      onError: (error) => {
+        Toast({ message: error.message, type: "ERROR" });
+      },
+    }
+  );
   useEffect(() => {
     getCommentMutate(postId);
-  }, [postId]);
+  }, [postId, likeLoading, isLoading, getCommentMutate, editLoading]);
   const handleSubmitComment = () => {
     mutate({ content: comment, userId: currentUser._id, postId });
   };
@@ -52,6 +68,10 @@ function CommentSection({ postId }) {
     } else {
       likeMutate(commetId);
     }
+  };
+
+  const handleEdit = (commentId, content) => {
+    mutateEdit({ content, commentId });
   };
   return (
     <div className="max-w-3xl flex flex-col gap-3 mx-auto w-full p-3">
@@ -103,15 +123,22 @@ function CommentSection({ postId }) {
         <p className="text-sm my-5">No comments yet!</p>
       ) : (
         <>
-          <div className="text-sm my-5 flex items-center gap-1">
-            <p>Comments</p>
-            <div className="border border-gray-400 py-1 px-2 rounded-sm">
-              <p>{comments.length}</p>
+          <>
+            <div className="text-sm my-5 flex items-center gap-1">
+              <p>Comments</p>
+              <div className="border border-gray-400 py-1 px-2 rounded-sm">
+                <p>{comments.length}</p>
+              </div>
             </div>
-          </div>
-          {comments.map((comment) => (
-            <Comment key={comment._id} comment={comment} onLike={handleLike} />
-          ))}
+            {comments.map((comment) => (
+              <Comment
+                key={comment._id}
+                comment={comment}
+                onLike={handleLike}
+                onEdit={handleEdit}
+              />
+            ))}
+          </>
         </>
       )}
     </div>
