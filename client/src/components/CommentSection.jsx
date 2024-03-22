@@ -1,15 +1,16 @@
 import { Button, Textarea } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
-import { createComment, getComments } from "../api/comment.api";
+import { createComment, getComments, likeComment } from "../api/comment.api";
 import Toast from "../shared/Toast";
 import Comment from "./Comment";
 function CommentSection({ postId }) {
   const { currentUser } = useSelector((state) => state.user);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
+  const navigate = useNavigate();
   const { mutate, isLoading } = useMutation(createComment, {
     onSuccess: () => {
       Toast({ message: "Add comment success!", type: "SUCCESS" });
@@ -29,12 +30,29 @@ function CommentSection({ postId }) {
       },
     }
   );
-  const handleSubmitComment = () => {
-    mutate({ content: comment, userId: currentUser._id, postId });
-  };
+  const { mutate: likeMutate } = useMutation(likeComment, {
+    onSuccess: (data) => {
+      Toast({ message: "Liked success", type: "SUCCESS" });
+    },
+    onError: (error) => {
+      Toast({ message: error.message, type: "ERROR" });
+    },
+  });
   useEffect(() => {
     getCommentMutate(postId);
   }, [postId]);
+  const handleSubmitComment = () => {
+    mutate({ content: comment, userId: currentUser._id, postId });
+  };
+
+  const handleLike = (commetId) => {
+    if (!currentUser) {
+      navigate("/sign-in");
+      return;
+    } else {
+      likeMutate(commetId);
+    }
+  };
   return (
     <div className="max-w-3xl flex flex-col gap-3 mx-auto w-full p-3">
       {currentUser ? (
@@ -92,7 +110,7 @@ function CommentSection({ postId }) {
             </div>
           </div>
           {comments.map((comment) => (
-            <Comment key={comment._id} comment={comment} />
+            <Comment key={comment._id} comment={comment} onLike={handleLike} />
           ))}
         </>
       )}
