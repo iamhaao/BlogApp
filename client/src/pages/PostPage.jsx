@@ -20,7 +20,7 @@ function PostPage() {
   });
   useEffect(() => {
     mutate({ postSlug });
-  }, [postSlug]);
+  }, [postSlug, mutate]);
   return (
     <Layout>
       <div>

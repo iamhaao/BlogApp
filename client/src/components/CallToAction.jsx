@@ -26,11 +26,7 @@ function CallToAction() {
         </Button>
       </div>
       <div className="p-7">
-        <img
-          className="w-80 h-60 "
-          src="/images/image.png"
-          alt="Action image"
-        />
+        <img className="w-80 h-60 " src="/images/image.png" alt="Javscrip" />
       </div>
     </div>
   );

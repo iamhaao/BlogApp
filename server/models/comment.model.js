@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 
 const commentSchema = new mongoose.Schema(
   {
@@ -11,7 +11,8 @@ const commentSchema = new mongoose.Schema(
       required: true,
     },
     userId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     likes: {
