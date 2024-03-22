@@ -6,7 +6,7 @@ import { Button, Textarea } from "flowbite-react";
 import { useMutation } from "react-query";
 import { editComment } from "../api/comment.api";
 import Toast from "../shared/Toast";
-function Comment({ comment, onLike, onEdit }) {
+function Comment({ comment, onLike, onEdit, onDelete }) {
   const { currentUser } = useSelector((state) => state.user);
   const [editContent, setEditContent] = useState(comment.content);
   const [isEditing, setIsEditting] = useState(false);
@@ -88,13 +88,22 @@ function Comment({ comment, onLike, onEdit }) {
               </p>
               {currentUser &&
                 (currentUser._id === comment.userId || currentUser.isAdmin) && (
-                  <button
-                    type="button"
-                    onClick={handleEdit}
-                    className="hover:text-blue-500 text-gray-400"
-                  >
-                    edit
-                  </button>
+                  <>
+                    <button
+                      type="button"
+                      onClick={handleEdit}
+                      className="hover:text-blue-500 text-gray-400"
+                    >
+                      edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onDelete(comment._id)}
+                      className="text-red-500 hover:text-gray-400"
+                    >
+                      delete
+                    </button>
+                  </>
                 )}
             </div>
           </>

@@ -82,3 +82,24 @@ export const likeComment = async (req, res, next) => {
     next(error);
   }
 };
+export const deleteComment = async (req, res, next) => {
+  try {
+    const { commentId } = req.params;
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+      return next(errorHandler(400, "Comment not found"));
+    }
+    if (
+      comment.userId.toString() !== req.user._id.toString() &&
+      !req.user.isAdmin
+    ) {
+      return next(errorHandler(403, "You are not allowed delete this comment"));
+    }
+
+    await Comment.findByIdAndDelete(commentId);
+    res.status(200).json("Comment has been deleted");
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
