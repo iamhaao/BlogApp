@@ -5,6 +5,7 @@ const initialState = {
   users: null,
   page: null,
   pages: null,
+  totalUsers: null,
 };
 
 const userSlice = createSlice({
@@ -27,6 +28,7 @@ const userSlice = createSlice({
       state.page = action.payload.page;
       state.pages = action.payload.pages;
       state.users = action.payload.users;
+      state.totalUsers = action.payload.totalUsers;
     },
   },
 });

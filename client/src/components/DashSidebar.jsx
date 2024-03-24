@@ -15,6 +15,7 @@ import { signOut } from "../api/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { signOutSuccess } from "../redux/user/userSlice";
 import Toast from "../shared/Toast";
+import { MdDashboard } from "react-icons/md";
 
 function DashSidebar({ tab }) {
   const { currentUser } = useSelector((state) => state.user);
@@ -38,6 +39,17 @@ function DashSidebar({ tab }) {
     <Sidebar className="w-full md:w-56">
       <Sidebar.Items>
         <Sidebar.ItemGroup className="flex flex-col gap-1">
+          {currentUser.isAdmin && (
+            <Link to={"/dashboard?tab=dash"}>
+              <Sidebar.Item
+                labelColor="dark"
+                active={tab === "dash"}
+                icon={MdDashboard}
+              >
+                DashBoard
+              </Sidebar.Item>
+            </Link>
+          )}
           <Link to={"/dashboard?tab=profile"}>
             <Sidebar.Item
               labelColor="dark"

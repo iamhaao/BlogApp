@@ -79,11 +79,11 @@ export const getUsers = async (req, res, next) => {
       const { password, ...rest } = user._doc;
       return rest;
     });
-    const totalUser = await User.countDocuments();
-    const pages = Math.ceil(totalUser / limit);
+    const totalUsers = await User.countDocuments();
+    const pages = Math.ceil(totalUsers / limit);
     res
       .status(200)
-      .json({ users: usersWithoutPassword, totalUser, page, pages });
+      .json({ users: usersWithoutPassword, totalUsers, page, pages });
   } catch (error) {
     next(error);
   }

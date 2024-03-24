@@ -13,7 +13,7 @@ const comment = createSlice({
   reducers: {
     getCommentSuccess: (state, action) => {
       state.comments = action.payload.comments;
-      state.totalComments = action.totalComments;
+      state.totalComments = action.payload.totalComments;
       state.page = action.payload.page;
       state.pages = action.payload.pages;
     },
