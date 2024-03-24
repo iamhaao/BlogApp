@@ -4,6 +4,7 @@ const initialState = {
   post: null,
   posts: null,
   totalPost: null,
+  recentPosts: null,
 };
 
 const postSlice = createSlice({
@@ -13,7 +14,10 @@ const postSlice = createSlice({
     getPostSuccess: (state, action) => {
       state.post = action.payload;
     },
+    getRecentsPostSuccess: (state, action) => {
+      state.recentPosts = action.payload;
+    },
   },
 });
-export const { getPostSuccess } = postSlice.actions;
+export const { getPostSuccess, getRecentsPostSuccess } = postSlice.actions;
 export default postSlice.reducer;

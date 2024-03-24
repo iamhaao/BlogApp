@@ -37,6 +37,9 @@ export const getPosts = async (getData) => {
     if (getData.postId) {
       url += `?postId=${getData.postId}`;
     }
+    if (getData.limit) {
+      url += `?limit=${getData.limit}`;
+    }
     const { data } = await axios.get(url, {
       headers: {
         "Content-Type": "application/json",
