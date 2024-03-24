@@ -3,6 +3,7 @@ import { Sidebar } from "flowbite-react";
 import { FaUser } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 import {
+  HiAnnotation,
   HiDocumentText,
   HiOutlineUserGroup,
   HiUserGroup,
@@ -65,6 +66,15 @@ function DashSidebar({ tab }) {
                   icon={HiOutlineUserGroup}
                 >
                   Users
+                </Sidebar.Item>
+              </Link>
+              <Link to={"/dashboard?tab=comments"}>
+                <Sidebar.Item
+                  labelColor="dark"
+                  active={tab === "comments"}
+                  icon={HiAnnotation}
+                >
+                  Comments
                 </Sidebar.Item>
               </Link>
             </>

@@ -90,7 +90,7 @@ export const deleteComment = async (req, res, next) => {
       return next(errorHandler(400, "Comment not found"));
     }
     if (
-      comment.userId.toString() !== req.user._id.toString() &&
+      comment.userId.toString() !== req.user._id.toString() ||
       !req.user.isAdmin
     ) {
       return next(errorHandler(403, "You are not allowed delete this comment"));
@@ -98,6 +98,26 @@ export const deleteComment = async (req, res, next) => {
 
     await Comment.findByIdAndDelete(commentId);
     res.status(200).json("Comment has been deleted");
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+export const getComments = async (req, res, next) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const sortDirection = req.query.sortDirection === "asc" ? 1 : -1;
+    const comments = await Comment.find({})
+      .sort({ createdAt: sortDirection })
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    const totalComments = await Comment.countDocuments();
+    const pages = Math.ceil(totalComments / limit);
+
+    res.status(200).json({ comments, totalComments, page, pages }); // Wrap comments and totalComments in an object
   } catch (error) {
     console.log(error);
     next(error);
