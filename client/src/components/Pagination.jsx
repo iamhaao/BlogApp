@@ -9,7 +9,9 @@ function Pagination({ page, pages, onPageChange }) {
         {pageNumber.map((number) => (
           <li
             key={number}
-            className={`px-2 py-1 ${page === number ? "bg-gray-200" : ""}`}
+            className={`dark:text-gray-800 px-2 py-1 ${
+              page === number ? "bg-gray-200" : ""
+            }`}
           >
             <button onClick={() => onPageChange(number)}>{number}</button>
           </li>
