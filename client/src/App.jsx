@@ -9,6 +9,7 @@ import { PrivateRoute, AdminRoute } from "./shared/PrivateRoute";
 import CreatePost from "./pages/CreatePost";
 import UpdatePost from "./pages/UpdatePost";
 import PostPage from "./pages/PostPage";
+import SearchPage from "./pages/Search";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/post/:postSlug" element={<PostPage />} />
+          <Route path="/search" element={<SearchPage />} />
 
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<DashBoard />} />

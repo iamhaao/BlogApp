@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Dropdown, Navbar, TextInput } from "flowbite-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
@@ -11,9 +11,18 @@ import Toast from "../shared/Toast";
 import { signOut } from "../api/auth";
 function Header() {
   const path = useLocation().pathname;
+  const location = useLocation();
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
-
+  const [searchIterm, setSearchIterm] = useState("");
+  const navigate = useNavigate();
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchTermFromUrl = urlParams.get("searchTerm");
+    if (searchTermFromUrl) {
+      setSearchIterm(searchTermFromUrl);
+    }
+  }, [location.search]);
   const dispatch = useDispatch();
   const { mutate: mutateSignout, isLoading: signoutLoading } = useMutation(
     signOut,
@@ -30,6 +39,13 @@ function Header() {
   const hanldeSignOut = () => {
     mutateSignout();
   };
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set("searchTerm", searchIterm);
+    const searchQuery = urlParams.toString();
+    navigate(`/search?${searchQuery}`);
+  };
   return (
     <Navbar className="border-b-2 sm:px-8">
       <Link
@@ -41,17 +57,19 @@ function Header() {
         </span>
         Blog
       </Link>
-      <form>
+      <form onSubmit={handleSearch}>
         <TextInput
           type="text"
           placeholder="Search ..."
           rightIcon={AiOutlineSearch}
           className="hidden lg:inline"
+          onChange={(e) => setSearchIterm(e.target.value)}
         />
+        <Button type="submit" className="w-12 h-10 lg:hidden" color="gray" pill>
+          <AiOutlineSearch />
+        </Button>
       </form>
-      <Button className="w-12 h-10 lg:hidden" color="gray" pill>
-        <AiOutlineSearch />
-      </Button>
+
       <div className="flex gap-2 md:gap-12 md:order-2 mr-4">
         <Button
           onClick={() => dispatch(toggleTheme())}

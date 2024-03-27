@@ -23,6 +23,7 @@ export const createPost = async (postData) => {
   }
 };
 export const getPosts = async (getData) => {
+  console.log(getData);
   try {
     let url = `${API_BASE_URL}/api/post/getPosts`;
     if (getData.postSlug) {
@@ -39,6 +40,15 @@ export const getPosts = async (getData) => {
     }
     if (getData.limit) {
       url += `?limit=${getData.limit}`;
+    }
+    if (getData.searchTerm) {
+      url += `?searchTerm=${getData.searchTerm}`;
+    }
+    if (getData.sort) {
+      url += `?sort=${getData.sort}`;
+    }
+    if (getData.category) {
+      url += `?category=${getData.category}`;
     }
     const { data } = await axios.get(url, {
       headers: {
