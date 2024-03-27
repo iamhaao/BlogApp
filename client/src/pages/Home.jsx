@@ -35,9 +35,7 @@ function Home() {
             View all post
           </Link>
         </div>
-        <div className="mx-3 bg-amber-100 dark:bg-slate-700 ">
-          <CallToAction />
-        </div>
+
         <div className="p-3 flex flex-col gap-8 py-7">
           {posts && posts.length > 0 && (
             <div>
@@ -51,6 +49,9 @@ function Home() {
               </div>
             </div>
           )}
+        </div>
+        <div className="mx-3 bg-amber-100 dark:bg-slate-700 ">
+          <CallToAction />
         </div>
       </div>
     </Layout>
